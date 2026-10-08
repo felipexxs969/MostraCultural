@@ -1,0 +1,13 @@
+{
+  "name": "mostra-cultural",
+  "version": "2.0.0",
+  "description": "Mostra Cultural - editor com login, imagens e elementos móveis",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "express": "^5.1.0"
+  }
+}

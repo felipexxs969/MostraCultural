@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mostra Cultural</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="pagina-inicial">
+
+<main class="inicio">
+    <section class="inicio-conteudo" aria-label="Escolha do andar">
+        <h1>Mostra Cultural</h1>
+
+        <div class="andares" id="andares">
+            <a class="botao-andar" href="login.html?andar=patio">Pátio</a>
+            <a class="botao-andar" href="login.html?andar=andar1">1º Andar</a>
+            <a class="botao-andar" href="login.html?andar=andar2">2º Andar</a>
+            <a class="botao-andar" href="login.html?andar=andar3">3º Andar</a>
+        </div>
+    </section>
+</main>
+
+<script src="site-config.js"></script>
+<script>
+    // Mantém os botões sincronizados com os nomes definidos no código.
+    const config = window.SITE_CONFIG;
+    const mapaDeBotoes = [
+        ["patio", "Pátio"],
+        ["andar1", "1º Andar"],
+        ["andar2", "2º Andar"],
+        ["andar3", "3º Andar"]
+    ];
+
+    if (config && config.andares) {
+        document.querySelectorAll(".botao-andar").forEach((botao, indice) => {
+            const item = mapaDeBotoes[indice];
+            const andar = config.andares[item[0]];
+            if (andar && andar.nome) {
+                botao.textContent = andar.nome;
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

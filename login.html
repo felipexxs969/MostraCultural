@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar - Mostra Cultural</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="login-box">
+
+            <h1>Mostra Cultural</h1>
+
+            <p class="subtitulo">
+                Faça login para acessar o mapa escolhido
+            </p>
+
+            <form id="loginForm">
+
+                <label for="email">
+                    E-mail
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Digite seu e-mail"
+                    autocomplete="email"
+                    required
+                >
+
+                <label for="senha">
+                    Senha
+                </label>
+
+                <input
+                    type="password"
+                    id="senha"
+                    placeholder="Digite sua senha"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    id="botaoLogin"
+                >
+                    Entrar
+                </button>
+
+            </form>
+
+            <p
+                id="mensagem"
+                class="mensagem"
+            ></p>
+
+            <p class="link-cadastro">
+                Ainda não possui uma conta?
+                <a href="cadastro.html">
+                    Criar conta
+                </a>
+            </p>
+
+            <p class="link-cadastro">
+                <a id="voltarEscolha" href="index.html">
+                    Voltar para escolher o andar
+                </a>
+            </p>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        const andar = new URLSearchParams(window.location.search).get("andar") || "patio";
+        document.getElementById("voltarEscolha").href = "index.html";
+    </script>
+
+</body>
+</html>
