@@ -143,7 +143,6 @@ body {
 
 .login-box input:focus {
     border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, .12);
 }
 
 .login-box button {
@@ -181,10 +180,6 @@ body {
     color: #4f46e5;
     font-weight: bold;
     text-decoration: none;
-}
-
-.login-box a:hover {
-    text-decoration: underline;
 }
 
 .mensagem {

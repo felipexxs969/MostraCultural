@@ -1,60 +1,83 @@
-<script>
-document.getElementById("loginForm").addEventListener("submit", async function (event) {
-    event.preventDefault();
+<!DOCTYPE html>
+<html lang="pt-BR">
 
-    const email = document.getElementById("email").value.trim();
-    const senha = document.getElementById("senha").value;
+<head>
+    <meta charset="UTF-8">
 
-    const mensagem = document.getElementById("mensagem");
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    mensagem.textContent = "Entrando...";
+    <title>Login - Mostra Cultural</title>
 
-    try {
-        const resposta = await fetch("/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email,
-                senha
-            })
-        });
+    <link rel="stylesheet" href="style.css">
+</head>
 
-        const dados = await resposta.json();
+<body>
 
-        if (!dados.sucesso) {
-            mensagem.textContent =
-                dados.mensagem || "Erro ao realizar login.";
-            return;
-        }
+<main class="container">
 
-        // Guarda o nome do usuário
-        sessionStorage.setItem(
-            "usuario",
-            dados.nome
-        );
+    <section class="login-box">
 
-        // Guarda o token da sessão
-        sessionStorage.setItem(
-            "token",
-            dados.token
-        );
+        <h1>Entrar</h1>
 
-        // Recupera o andar escolhido anteriormente
-        const andar =
-            sessionStorage.getItem("andarSelecionado") ||
-            "patio";
+        <p class="subtitulo">
+            Faça login para acessar o mapa.
+        </p>
 
-        window.location.href =
-            "mapa.html?andar=" +
-            encodeURIComponent(andar);
+        <form id="loginForm">
 
-    } catch (erro) {
-        console.error(erro);
+            <label for="email">
+                E-mail
+            </label>
 
-        mensagem.textContent =
-            "Erro ao conectar ao servidor.";
-    }
-});
-</script>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Digite seu e-mail"
+                required
+            >
+
+            <label for="senha">
+                Senha
+            </label>
+
+            <input
+                type="password"
+                id="senha"
+                name="senha"
+                placeholder="Digite sua senha"
+                required
+            >
+
+            <button
+                type="submit"
+                id="botaoLogin"
+            >
+                Entrar
+            </button>
+
+            <p
+                id="mensagem"
+                class="mensagem"
+            ></p>
+
+        </form>
+
+        <p class="link-cadastro">
+            Ainda não tem uma conta?
+            <a href="cadastro.html">
+                Cadastrar
+            </a>
+        </p>
+
+    </section>
+
+</main>
+
+<script src="script.js"></script>
+
+</body>
+</html>
