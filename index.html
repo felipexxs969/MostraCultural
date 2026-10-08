@@ -2,46 +2,76 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mostra Cultural</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login - Mostra Cultural</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="pagina-inicial">
 
-<main class="inicio">
-    <section class="inicio-conteudo" aria-label="Escolha do andar">
-        <h1>Mostra Cultural</h1>
+<body class="pagina-login">
 
-        <div class="andares" id="andares">
-            <a class="botao-andar" href="login.html?andar=patio">Pátio</a>
-            <a class="botao-andar" href="login.html?andar=andar1">1º Andar</a>
-            <a class="botao-andar" href="login.html?andar=andar2">2º Andar</a>
-            <a class="botao-andar" href="login.html?andar=andar3">3º Andar</a>
-        </div>
+<main class="login-container">
+
+    <section class="login-box">
+
+        <h1>Entrar</h1>
+
+        <p>
+            Faça login para acessar o mapa.
+        </p>
+
+        <form id="loginForm">
+
+            <label for="email">
+                E-mail
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Digite seu e-mail"
+                required
+            >
+
+            <label for="senha">
+                Senha
+            </label>
+
+            <input
+                type="password"
+                id="senha"
+                name="senha"
+                placeholder="Digite sua senha"
+                required
+            >
+
+            <button
+                type="submit"
+                id="botaoLogin"
+            >
+                Entrar
+            </button>
+
+            <p id="mensagem"></p>
+
+        </form>
+
+        <p>
+            Ainda não tem uma conta?
+            <a href="cadastro.html">Cadastrar</a>
+        </p>
+
     </section>
+
 </main>
 
-<script src="site-config.js"></script>
-<script>
-    // Mantém os botões sincronizados com os nomes definidos no código.
-    const config = window.SITE_CONFIG;
-    const mapaDeBotoes = [
-        ["patio", "Pátio"],
-        ["andar1", "1º Andar"],
-        ["andar2", "2º Andar"],
-        ["andar3", "3º Andar"]
-    ];
-
-    if (config && config.andares) {
-        document.querySelectorAll(".botao-andar").forEach((botao, indice) => {
-            const item = mapaDeBotoes[indice];
-            const andar = config.andares[item[0]];
-            if (andar && andar.nome) {
-                botao.textContent = andar.nome;
-            }
-        });
-    }
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
