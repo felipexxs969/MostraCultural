@@ -3,9 +3,13 @@ function salvarToken(token) {
 }
 
 function obterAndarEscolhido() {
-    const parametros = new URLSearchParams(window.location.search);
+    const parametros = new URLSearchParams(
+        window.location.search
+    );
+
     return parametros.get("andar") || "patio";
 }
+
 
 // ========================================
 // LOGIN
@@ -14,110 +18,258 @@ function obterAndarEscolhido() {
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
-    loginForm.addEventListener("submit", async function(event) {
-        event.preventDefault();
 
-        const email = document.getElementById("email").value.trim();
-        const senha = document.getElementById("senha").value;
-        const mensagem = document.getElementById("mensagem");
-        const botao = document.getElementById("botaoLogin");
-        const andar = obterAndarEscolhido();
+    loginForm.addEventListener(
+        "submit",
+        async function(event) {
 
-        mensagem.textContent = "Entrando...";
-        mensagem.style.color = "#555";
-        botao.disabled = true;
+            event.preventDefault();
 
-        try {
-            const resposta = await fetch("/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ email, senha })
-            });
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
 
-            const resultado = await resposta.json();
+            const senha =
+                document
+                    .getElementById("senha")
+                    .value;
 
-            if (resultado.sucesso) {
-                salvarToken(resultado.token);
-                mensagem.textContent = "Login realizado!";
-                mensagem.style.color = "#16a34a";
+            const mensagem =
+                document.getElementById("mensagem");
 
-                setTimeout(() => {
-                    window.location.href = `mapa.html?andar=${encodeURIComponent(andar)}`;
-                }, 350);
+            const botao =
+                document.getElementById("botaoLogin");
+
+            const andar =
+                obterAndarEscolhido();
+
+
+            mensagem.textContent = "Entrando...";
+            mensagem.style.color = "#555";
+
+            botao.disabled = true;
+
+
+            try {
+
+                const resposta = await fetch(
+                    "/login",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            email,
+                            senha
+                        })
+                    }
+                );
+
+
+                const resultado =
+                    await resposta.json();
+
+
+                if (resultado.sucesso) {
+
+                    salvarToken(
+                        resultado.token
+                    );
+
+
+                    mensagem.textContent =
+                        "Login realizado!";
+
+                    mensagem.style.color =
+                        "#16a34a";
+
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            `mapa.html?andar=${encodeURIComponent(andar)}`;
+
+                    }, 350);
+
+                }
+
+                else {
+
+                    mensagem.textContent =
+                        resultado.mensagem ||
+                        "Não foi possível entrar.";
+
+                    mensagem.style.color =
+                        "#dc2626";
+
+                    botao.disabled = false;
+                }
+
             }
-            else {
-                mensagem.textContent = resultado.mensagem || "Não foi possível entrar.";
-                mensagem.style.color = "#dc2626";
+
+            catch (erro) {
+
+                console.error(
+                    "Erro no login:",
+                    erro
+                );
+
+                mensagem.textContent =
+                    "Erro ao conectar com o servidor.";
+
+                mensagem.style.color =
+                    "#dc2626";
+
                 botao.disabled = false;
             }
+
         }
-        catch (erro) {
-            console.error("Erro no login:", erro);
-            mensagem.textContent = "Erro ao conectar com o servidor.";
-            mensagem.style.color = "#dc2626";
-            botao.disabled = false;
-        }
-    });
+    );
 }
+
 
 // ========================================
 // CADASTRO
 // ========================================
 
-const cadastroForm = document.getElementById("cadastroForm");
+const cadastroForm =
+    document.getElementById("cadastroForm");
 
 if (cadastroForm) {
-    cadastroForm.addEventListener("submit", async function(event) {
-        event.preventDefault();
 
-        const nome = document.getElementById("nome").value.trim();
-        const email = document.getElementById("emailCadastro").value.trim();
-        const senha = document.getElementById("senhaCadastro").value;
-        const mensagem = document.getElementById("mensagemCadastro");
-        const botao = document.getElementById("botaoCadastro");
+    cadastroForm.addEventListener(
+        "submit",
+        async function(event) {
 
-        if (senha.length < 6) {
-            mensagem.textContent = "A senha precisa ter pelo menos 6 caracteres.";
-            mensagem.style.color = "#dc2626";
-            return;
-        }
+            event.preventDefault();
 
-        mensagem.textContent = "Criando conta...";
-        mensagem.style.color = "#555";
-        botao.disabled = true;
 
-        try {
-            const resposta = await fetch("/cadastro", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ nome, email, senha })
-            });
+            const nome =
+                document
+                    .getElementById("nome")
+                    .value
+                    .trim();
 
-            const resultado = await resposta.json();
+            const email =
+                document
+                    .getElementById("emailCadastro")
+                    .value
+                    .trim();
 
-            if (resultado.sucesso) {
-                mensagem.textContent = "Conta criada! Agora faça login.";
-                mensagem.style.color = "#16a34a";
+            const senha =
+                document
+                    .getElementById("senhaCadastro")
+                    .value;
 
-                setTimeout(() => {
-                    window.location.href = "login.html";
-                }, 900);
+            const mensagem =
+                document.getElementById(
+                    "mensagemCadastro"
+                );
+
+            const botao =
+                document.getElementById(
+                    "botaoCadastro"
+                );
+
+
+            if (senha.length < 6) {
+
+                mensagem.textContent =
+                    "A senha precisa ter pelo menos 6 caracteres.";
+
+                mensagem.style.color =
+                    "#dc2626";
+
+                return;
             }
-            else {
-                mensagem.textContent = resultado.mensagem || "Erro ao cadastrar.";
-                mensagem.style.color = "#dc2626";
+
+
+            mensagem.textContent =
+                "Criando conta...";
+
+            mensagem.style.color =
+                "#555";
+
+            botao.disabled = true;
+
+
+            try {
+
+                const resposta = await fetch(
+                    "/cadastro",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            nome,
+                            email,
+                            senha
+                        })
+                    }
+                );
+
+
+                const resultado =
+                    await resposta.json();
+
+
+                if (resultado.sucesso) {
+
+                    mensagem.textContent =
+                        "Conta criada! Agora faça login.";
+
+                    mensagem.style.color =
+                        "#16a34a";
+
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            "login.html";
+
+                    }, 900);
+
+                }
+
+                else {
+
+                    mensagem.textContent =
+                        resultado.mensagem ||
+                        "Erro ao cadastrar.";
+
+                    mensagem.style.color =
+                        "#dc2626";
+
+                    botao.disabled = false;
+                }
+
+            }
+
+            catch (erro) {
+
+                console.error(
+                    "Erro no cadastro:",
+                    erro
+                );
+
+                mensagem.textContent =
+                    "Erro ao conectar com o servidor.";
+
+                mensagem.style.color =
+                    "#dc2626";
+
                 botao.disabled = false;
             }
+
         }
-        catch (erro) {
-            console.error("Erro no cadastro:", erro);
-            mensagem.textContent = "Erro ao conectar com o servidor.";
-            mensagem.style.color = "#dc2626";
-            botao.disabled = false;
-        }
-    });
+    );
 }

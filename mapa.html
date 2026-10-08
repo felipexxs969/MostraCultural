@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -10,94 +12,220 @@
 
     <title>Mapa - Mostra Cultural</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
     <script src="site-config.js"></script>
+
 </head>
 
 <body class="pagina-mapa">
 
 <header class="barra-mapa">
-    <strong id="nomeAndar">Mapa</strong>
+
+    <strong id="nomeAndar">
+        Mapa
+    </strong>
+
 </header>
 
-<main id="mapa-viewport" aria-label="Mapa do andar">
+
+<main
+    id="mapa-viewport"
+    aria-label="Mapa do andar"
+>
+
     <div id="site"></div>
+
 </main>
 
-<script>
-async function verificarLogin() {
-    const token = sessionStorage.getItem("token");
 
-    // Sem token = não está logado
+<script>
+
+async function verificarLogin() {
+
+    const token =
+        sessionStorage.getItem("token");
+
+
     if (!token) {
-        window.location.href = "login.html";
+
+        window.location.href =
+            "login.html";
+
         return false;
     }
 
+
     try {
-        const resposta = await fetch("/api/auth/me", {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        });
 
-        const dados = await resposta.json();
+        const resposta =
+            await fetch(
+                "/api/auth/me",
+                {
+                    method: "GET",
 
-        // Sessão inválida ou expirada
-        if (!resposta.ok || !dados.sucesso) {
-            sessionStorage.removeItem("token");
-            sessionStorage.removeItem("usuario");
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
 
-            window.location.href = "login.html";
+
+        const dados =
+            await resposta.json();
+
+
+        if (
+            !resposta.ok ||
+            !dados.sucesso
+        ) {
+
+            sessionStorage.removeItem(
+                "token"
+            );
+
+            sessionStorage.removeItem(
+                "usuario"
+            );
+
+
+            window.location.href =
+                "login.html";
+
             return false;
         }
 
-        // Atualiza o nome armazenado
+
         sessionStorage.setItem(
             "usuario",
             dados.nome
         );
 
+
         return true;
 
-    } catch (erro) {
+    }
+
+    catch (erro) {
+
         console.error(
             "Erro ao verificar login:",
             erro
         );
 
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("usuario");
 
-        window.location.href = "login.html";
+        sessionStorage.removeItem(
+            "token"
+        );
+
+        sessionStorage.removeItem(
+            "usuario"
+        );
+
+
+        window.location.href =
+            "login.html";
+
         return false;
     }
 }
 
+
+function mostrarNomeDoAndar() {
+
+    const parametros =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const andar =
+        parametros.get("andar") ||
+        "patio";
+
+
+    const nomes = {
+
+        patio: "Pátio",
+
+        andar1: "1º Andar",
+
+        andar2: "2º Andar",
+
+        andar3: "3º Andar"
+
+    };
+
+
+    const elemento =
+        document.getElementById(
+            "nomeAndar"
+        );
+
+
+    if (elemento) {
+
+        elemento.textContent =
+            nomes[andar] ||
+            "Mapa";
+    }
+}
+
+
 (async function iniciarPagina() {
-    const autenticado = await verificarLogin();
+
+    const autenticado =
+        await verificarLogin();
+
 
     if (!autenticado) {
         return;
     }
 
-    // Só carrega o mapa depois que o login foi confirmado
-    const scriptMapa = document.createElement("script");
 
-    scriptMapa.src = "mapa.js";
+    mostrarNomeDoAndar();
 
-    scriptMapa.onload = function () {
-        console.log("mapa.js carregado com sucesso.");
-    };
 
-    scriptMapa.onerror = function () {
-        console.error("Não foi possível carregar o mapa.");
-    };
+    const scriptMapa =
+        document.createElement(
+            "script"
+        );
 
-    document.body.appendChild(scriptMapa);
+
+    scriptMapa.src =
+        "mapa.js";
+
+
+    scriptMapa.onload =
+        function() {
+
+            console.log(
+                "mapa.js carregado com sucesso."
+            );
+
+        };
+
+
+    scriptMapa.onerror =
+        function() {
+
+            console.error(
+                "Não foi possível carregar o mapa."
+            );
+
+        };
+
+
+    document.body.appendChild(
+        scriptMapa
+    );
+
 })();
+
 </script>
 
 </body>
