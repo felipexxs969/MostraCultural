@@ -1,89 +1,50 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar conta - Mostra Cultural</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<script>
+document.getElementById("cadastroForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-<body>
+    const nome =
+        document.getElementById("nome").value.trim();
 
-    <main class="container">
+    const email =
+        document.getElementById("emailCadastro").value.trim();
 
-        <section class="login-box">
+    const senha =
+        document.getElementById("senhaCadastro").value;
 
-            <h1>Criar conta</h1>
+    const mensagem =
+        document.getElementById("mensagem");
 
-            <p class="subtitulo">
-                Crie sua conta para acessar os mapas
-            </p>
+    mensagem.textContent = "Cadastrando...";
 
-            <form id="cadastroForm">
+    try {
+        const resposta = await fetch("/cadastro", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nome,
+                email,
+                senha
+            })
+        });
 
-                <label for="nome">
-                    Nome
-                </label>
+        const dados = await resposta.json();
 
-                <input
-                    type="text"
-                    id="nome"
-                    placeholder="Digite seu nome"
-                    autocomplete="name"
-                    required
-                >
+        mensagem.textContent =
+            dados.mensagem || "";
 
-                <label for="emailCadastro">
-                    E-mail
-                </label>
+        if (dados.sucesso) {
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1000);
+        }
 
-                <input
-                    type="email"
-                    id="emailCadastro"
-                    placeholder="Digite seu e-mail"
-                    autocomplete="email"
-                    required
-                >
+    } catch (erro) {
+        console.error(erro);
 
-                <label for="senhaCadastro">
-                    Senha
-                </label>
-
-                <input
-                    type="password"
-                    id="senhaCadastro"
-                    placeholder="Mínimo de 6 caracteres"
-                    minlength="6"
-                    autocomplete="new-password"
-                    required
-                >
-
-                <button
-                    type="submit"
-                    id="botaoCadastro"
-                >
-                    Criar conta
-                </button>
-
-            </form>
-
-            <p
-                id="mensagemCadastro"
-                class="mensagem"
-            ></p>
-
-            <p class="link-cadastro">
-                Já possui uma conta?
-                <a href="login.html">
-                    Entrar
-                </a>
-            </p>
-
-        </section>
-
-    </main>
-
-    <script src="script.js"></script>
-
-</body>
-</html>
+        mensagem.textContent =
+            "Erro ao conectar ao servidor.";
+    }
+});
+</script>

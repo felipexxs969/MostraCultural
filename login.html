@@ -1,86 +1,60 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrar - Mostra Cultural</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-<body>
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value;
 
-    <main class="container">
+    const mensagem = document.getElementById("mensagem");
 
-        <section class="login-box">
+    mensagem.textContent = "Entrando...";
 
-            <h1>Mostra Cultural</h1>
+    try {
+        const resposta = await fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                senha
+            })
+        });
 
-            <p class="subtitulo">
-                Faça login para acessar o mapa escolhido
-            </p>
+        const dados = await resposta.json();
 
-            <form id="loginForm">
+        if (!dados.sucesso) {
+            mensagem.textContent =
+                dados.mensagem || "Erro ao realizar login.";
+            return;
+        }
 
-                <label for="email">
-                    E-mail
-                </label>
+        // Guarda o nome do usuário
+        sessionStorage.setItem(
+            "usuario",
+            dados.nome
+        );
 
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="Digite seu e-mail"
-                    autocomplete="email"
-                    required
-                >
+        // Guarda o token da sessão
+        sessionStorage.setItem(
+            "token",
+            dados.token
+        );
 
-                <label for="senha">
-                    Senha
-                </label>
+        // Recupera o andar escolhido anteriormente
+        const andar =
+            sessionStorage.getItem("andarSelecionado") ||
+            "patio";
 
-                <input
-                    type="password"
-                    id="senha"
-                    placeholder="Digite sua senha"
-                    autocomplete="current-password"
-                    required
-                >
+        window.location.href =
+            "mapa.html?andar=" +
+            encodeURIComponent(andar);
 
-                <button
-                    type="submit"
-                    id="botaoLogin"
-                >
-                    Entrar
-                </button>
+    } catch (erro) {
+        console.error(erro);
 
-            </form>
-
-            <p
-                id="mensagem"
-                class="mensagem"
-            ></p>
-
-            <p class="link-cadastro">
-                Ainda não possui uma conta?
-                <a href="cadastro.html">
-                    Criar conta
-                </a>
-            </p>
-
-            <p class="link-cadastro">
-                <a id="voltarEscolha" href="index.html">
-                    Voltar para escolher o andar
-                </a>
-            </p>
-
-        </section>
-
-    </main>
-
-    <script src="script.js"></script>
-    <script>
-        const andar = new URLSearchParams(window.location.search).get("andar") || "patio";
-        document.getElementById("voltarEscolha").href = "index.html";
-    </script>
-
-</body>
-</html>
+        mensagem.textContent =
+            "Erro ao conectar ao servidor.";
+    }
+});
+</script>

@@ -2,11 +2,19 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
     <title>Mapa - Mostra Cultural</title>
+
     <link rel="stylesheet" href="style.css">
+
     <script src="site-config.js"></script>
 </head>
+
 <body class="pagina-mapa">
 
 <header class="barra-mapa">
@@ -17,6 +25,80 @@
     <div id="site"></div>
 </main>
 
-<script src="mapa.js"></script>
+<script>
+async function verificarLogin() {
+    const token = sessionStorage.getItem("token");
+
+    // Sem token = não está logado
+    if (!token) {
+        window.location.href = "login.html";
+        return false;
+    }
+
+    try {
+        const resposta = await fetch("/api/auth/me", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        const dados = await resposta.json();
+
+        // Sessão inválida ou expirada
+        if (!resposta.ok || !dados.sucesso) {
+            sessionStorage.removeItem("token");
+            sessionStorage.removeItem("usuario");
+
+            window.location.href = "login.html";
+            return false;
+        }
+
+        // Atualiza o nome armazenado
+        sessionStorage.setItem(
+            "usuario",
+            dados.nome
+        );
+
+        return true;
+
+    } catch (erro) {
+        console.error(
+            "Erro ao verificar login:",
+            erro
+        );
+
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("usuario");
+
+        window.location.href = "login.html";
+        return false;
+    }
+}
+
+(async function iniciarPagina() {
+    const autenticado = await verificarLogin();
+
+    if (!autenticado) {
+        return;
+    }
+
+    // Só carrega o mapa depois que o login foi confirmado
+    const scriptMapa = document.createElement("script");
+
+    scriptMapa.src = "mapa.js";
+
+    scriptMapa.onload = function () {
+        console.log("mapa.js carregado com sucesso.");
+    };
+
+    scriptMapa.onerror = function () {
+        console.error("Não foi possível carregar o mapa.");
+    };
+
+    document.body.appendChild(scriptMapa);
+})();
+</script>
+
 </body>
 </html>
